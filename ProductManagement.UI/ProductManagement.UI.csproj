@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ProductManagement.Domain\ProductManagement.Domain.csproj" />
     <ProjectReference Include="..\ProductManagement.Repository.EF\ProductManagement.Repository.EF.csproj" />
+    <ProjectReference Include="..\ProductManagement.Repository.InMemory\ProductManagement.Repository.InMemory.csproj" />
   </ItemGroup>
 
 </Project>
