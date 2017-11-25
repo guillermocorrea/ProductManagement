@@ -7,12 +7,7 @@ namespace ProductManagement.Repository.InMemory
 {
     public class ProductsInMemoryRepository : IProductsRepository
     {
-        private IList<Product> _products;
-
-        public ProductsInMemoryRepository()
-        {
-            _products = new List<Product>();
-        }
+        private static IList<Product> _products = new List<Product>();
 
         public void AddProduct(Product product)
         {

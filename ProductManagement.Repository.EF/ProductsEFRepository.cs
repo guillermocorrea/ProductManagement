@@ -9,23 +9,23 @@ namespace ProductManagement.Repository.EF
     public class ProductsEFRepository : IProductsRepository
     {
         private readonly ProductsContext _productsContext;
-        private Mapper _mapper;
+        private IMapper _mapper;
 
-        public ProductsEFRepository(ProductsContext productsContext)
+        public ProductsEFRepository(ProductsContext productsContext, IMapper mapper)
         {
             _productsContext = productsContext;
-            var mapperConfig = new MapperConfiguration(cfg => cfg.CreateMap<DataModel.Product, ProductManagement.Domain.Product>());
-            _mapper = new Mapper(mapperConfig);
+            _mapper = mapper;
         }
 
         public void AddProduct(Product product)
         {
-            _productsContext.Add(product);
+            _productsContext.Products.Add(_mapper.Map<DataModel.Product>(product));
+            _productsContext.SaveChanges();
         }
 
         public IList<Product> GetProducts()
         {
-            return _mapper.DefaultContext.Mapper.Map<IList<Product>>(_productsContext.Products.ToList());
+            return _mapper.Map<IList<Product>>(_productsContext.Products.ToList());
         }
     }
 }

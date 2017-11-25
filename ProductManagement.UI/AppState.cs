@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ProductManagement.UI
 {
-    public class AppState
+    public class AppSettings
     {
         public DataStorageOption CurrentDataStorage { get; set; }
     }

@@ -9,6 +9,9 @@ using Microsoft.Extensions.DependencyInjection;
 using ProductManagement.Repository.EF;
 using Microsoft.EntityFrameworkCore;
 using ProductManagement.Domain;
+using ProductManagement.Services.Interfaces;
+using ProductManagement.Services;
+using AutoMapper;
 
 namespace ProductManagement.UI
 {
@@ -27,9 +30,15 @@ namespace ProductManagement.UI
             services.AddDbContext<ProductsContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddMvc();
+            services.AddAutoMapper();
 
-            services.AddSingleton<AppState>();
-            services.AddScoped<IProductsRepository>(ctx => new RepositoryFactory(ctx.GetService<AppState>()).Build());
+            services.AddSingleton<AppSettings>();
+            services.AddTransient<IProductsService, ProductsService>();
+            services.AddTransient<IProductsRepository>(serviceProvider => 
+                new RepositoryFactory(serviceProvider.GetRequiredService<AppSettings>(), 
+                    serviceProvider.GetRequiredService<ProductsContext>(), 
+                    serviceProvider.GetRequiredService<IMapper>())
+                    .Build());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,7 +60,7 @@ namespace ProductManagement.UI
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Products}/{action=Index}/{id?}");
             });
         }
     }

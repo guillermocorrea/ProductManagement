@@ -1,0 +1,9 @@
+﻿@model ProductManagement.UI.ViewComponents.DataStorageViewModel
+<form asp-controller="Products" asp-action="UpdateDataStorage" method="post" id="update-data-storage">
+    <div class="form-group">
+        <label asp-for="DataStorage" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <select asp-for="DataStorage" id="data-storage-select" asp-items="Html.GetEnumSelectList<DataStorageOption>()"></select>
+        </div>
+    </div>
+</form>

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using ProductManagement.Domain;
 using ProductManagement.Repository.EF;
 using ProductManagement.Repository.InMemory;
@@ -11,44 +12,21 @@ namespace ProductManagement.UI
 {
     public class RepositoryFactory
     {
-        private static ProductsEFRepository _efRepository = null;
-        private static ProductsInMemoryRepository _inMemoryRepository = null;
+        private readonly AppSettings _appState;
+        private readonly ProductsContext _productsContext;
+        private readonly IMapper _mapper;
 
-        private static readonly object _inMemoryPadlock = new object();
-        private static readonly object _efPadlock = new object();
-
-        private readonly AppState _appState;
-
-        private readonly string _connectionString;
-
-        public RepositoryFactory(AppState appState, string connectionString)
+        public RepositoryFactory(AppSettings appState, ProductsContext productsContext, IMapper mapper)
         {
             _appState = appState;
-            _connectionString = connectionString;
+            _productsContext = productsContext;
+            _mapper = mapper;
         }
 
         public IProductsRepository Build()
         {
-            //return _appState.CurrentDataStorage == DataStorageOption.InMemory ? 
-            throw new NotImplementedException();
-        }
-
-        private static ProductsEFRepository EFRepository
-        {
-            get
-            {
-                lock (_efPadlock)
-                {
-                    if (_efRepository == null)
-                    {
-                        var optionsBuilder = new DbContextOptionsBuilder<ProductsContext>();
-                        // optionsBuilder.UseSqlServer(_connectionString);
-
-                        _efRepository = new ProductsEFRepository(new ProductsContext(optionsBuilder.Options));
-                    }
-                    return _efRepository;
-                }
-            }
+            return _appState.CurrentDataStorage == DataStorageOption.InMemory ?
+                (IProductsRepository) new ProductsInMemoryRepository() : (IProductsRepository) new ProductsEFRepository(_productsContext, _mapper);
         }
     }
 }

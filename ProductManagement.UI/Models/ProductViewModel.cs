@@ -1,21 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace ProductManagement.Repository.EF.DataModel
+namespace ProductManagement.UI.Models
 {
-    public class Product
+    public class ProductViewModel
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
         [Required]
         public string Number { get; set; }
         [Required]
         public string Title { get; set; }
+        [DisplayFormat(DataFormatString = "${0:C0}")]
         public decimal Price { get; set; }
-
-        public Product() { }
     }
 }
